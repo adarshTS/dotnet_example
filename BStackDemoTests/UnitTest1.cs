@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using NUnit.Framework;
 
 namespace BStackDemoTests;
 
@@ -39,5 +40,12 @@ public class Tests
         System.Threading.Thread.Sleep(2000);
         
         Assert.Pass();
+    }
+
+    [Test]
+    public void Analytics_TC003_SkipStatus_VerifySkipReporting()
+    {
+        TestContext.WriteLine("[ANALYTICS] This test will be skipped to evaluate skip tracking");
+        Assert.Ignore("Test");
     }
 }
