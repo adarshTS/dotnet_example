@@ -1,0 +1,30 @@
+userName: ${BROWSERSTACK_USERNAME_DEMO}
+accessKey: ${BROWSERSTACK_ACCESS_KEY_DEMO}
+projectName: BrowserStack Dotnet Sample 
+buildName: BStackDemo 
+buildIdentifier: '#${BUILD_NUMBER}' # Supports strings along with either/both ${expression}
+platforms:
+  - os: OS X
+    osVersion: Big Sur
+    browserName: Chrome
+    browserVersion: latest
+  - os: Windows
+    osVersion: 10
+    browserName: Edge
+    browserVersion: latest
+  - deviceName: Samsung Galaxy S22 Ultra
+    browserName: chrome # Try 'samsung' for Samsung browser
+    osVersion: 12.0
+
+parallelsPerPlatform: 1
+browserstackLocal: false # <boolean> (Default false)
+# browserStackLocalOptions:
+# Options to be passed to BrowserStack local in-case of advanced configurations
+  # localIdentifier: # <string> (Default: null) Needed if you need to run multiple instances of local.
+  # forceLocal: true  # <boolean> (Default: false) Set to true if you need to resolve all your traffic via BrowserStack Local tunnel.
+  # Entire list of arguments available here -> https://www.browserstack.com/docs/automate/selenium/manage-incoming-connections
+debug: true # <boolean> # Set to true if you need screenshots for every selenium command ran
+networkLogs: true # <boolean> Set to true to enable HAR logs capturing
+consoleLogs: errors # <string> Remote browser's console debug levels to be printed (Default: errors)
+# Available options are `disable`, `errors`, `warnings`, `info`, `verbose` (Default: errors)
+logLevel: debug
