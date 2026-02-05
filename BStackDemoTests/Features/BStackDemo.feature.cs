@@ -106,7 +106,7 @@ namespace BStackDemoTests.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/BStackDemo.feature.ndjson", 3);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/BStackDemo.feature.ndjson", 4);
         }
         
         [global::NUnit.Framework.TestAttribute()]
@@ -140,6 +140,39 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
 #line 10
     await testRunner.ThenAsync("the product should be added successfully", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::NUnit.Framework.TestAttribute()]
+        [global::NUnit.Framework.DescriptionAttribute("Skip test for analytics tracking")]
+        public async global::System.Threading.Tasks.Task SkipTestForAnalyticsTracking()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "1";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Skip test for analytics tracking", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 12
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 13
+    await testRunner.GivenAsync("I am testing skip reporting", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 14
+    await testRunner.WhenAsync("I intentionally skip this test", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 15
+    await testRunner.ThenAsync("this test should be marked as skipped", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

@@ -9,7 +9,7 @@ Scenario: Filter by Google and add product to cart
     And I add the first product to cart
     Then the product should be added successfully
 
-# Scenario: Skip test for analytics tracking
-#     Given I am testing skip reporting
-#     When I intentionally skip this test
-#     Then this test should be marked as skipped
+Scenario: Skip test for analytics tracking
+    Given I am testing skip reporting
+    When I intentionally skip this test
+    Then this test should be marked as skipped
