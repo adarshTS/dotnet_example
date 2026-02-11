@@ -36,8 +36,8 @@ public class BStackDemoSteps
             { "os", "Windows" },
             { "osVersion", "11" },
             { "browserVersion", "latest" },
-            { "projectName", "BrowserStack Dotnet LegacySample4" },
-            { "buildName", "BStackDemoLegacy4" },
+            { "projectName", "BrowserStack Dotnet Legacy StatusMarking" },
+            { "buildName", "BStackDemoLegacyStatusMarking" },
             { "sessionName", _scenarioContext.ScenarioInfo.Title },
             { "debug", "true" },
             { "networkLogs", "true" },
@@ -52,8 +52,47 @@ public class BStackDemoSteps
     [AfterScenario]
     public void TearDown()
     {
-        _driver?.Quit();
-        _driver?.Dispose();
+        if (_driver != null)
+        {
+            try
+            {
+                var testError = _scenarioContext.TestError;
+                var status = "passed";
+                var reason = "Test passed successfully";
+                
+                if (testError != null)
+                {
+                    if (testError.GetType().Name == "SuccessException")
+                    {
+                        status = "passed";
+                        reason = testError.Message;
+                    }
+                    else if (testError.GetType().Name == "IgnoreException")
+                    {
+                        status = "passed";
+                        reason = "Test was skipped: " + testError.Message;
+                    }
+                    else
+                    {
+                        status = "failed";
+                        reason = testError.Message ?? "Test failed";
+                    }
+                }
+                
+                var jsExecutor = (IJavaScriptExecutor)_driver;
+                var script = $"browserstack_executor: {{\"action\": \"setSessionStatus\", \"arguments\": {{\"status\":\"{status}\", \"reason\":\"{reason.Replace("\"", "'")}\"}}}}";
+                jsExecutor.ExecuteScript(script);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to mark BrowserStack session status: {ex.Message}");
+            }
+            finally
+            {
+                _driver.Quit();
+                _driver.Dispose();
+            }
+        }
     }
 
     [Given(@"I am on the BStackDemo homepage")]

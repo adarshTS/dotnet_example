@@ -29,8 +29,8 @@ public class Tests
             { "os", "Windows" },
             { "osVersion", "11" },
             { "browserVersion", "latest" },
-            { "projectName", "BrowserStack Dotnet LegacySample4" },
-            { "buildName", "BStackDemoLegacy4" },
+            { "projectName", "BrowserStack Dotnet Legacy StatusMarking" },
+            { "buildName", "BStackDemoLegacyStatusMarking" },
             { "sessionName", TestContext.CurrentContext.Test.Name },
             { "debug", "true" },
             { "networkLogs", "true" },
@@ -45,8 +45,30 @@ public class Tests
     [TearDown]
     public void TearDown()
     {
-        driver?.Quit();
-        driver?.Dispose();
+        if (driver != null)
+        {
+            try
+            {
+                var outcome = TestContext.CurrentContext.Result.Outcome.Status;
+                var testPassed = outcome == NUnit.Framework.Interfaces.TestStatus.Passed;
+                var status = testPassed ? "passed" : "failed";
+                var reason = testPassed ? "Test passed successfully" : TestContext.CurrentContext.Result.Message ?? "Test failed";
+                
+                // Mark session status using JavaScript executor
+                var jsExecutor = (IJavaScriptExecutor)driver;
+                var script = $"browserstack_executor: {{\"action\": \"setSessionStatus\", \"arguments\": {{\"status\":\"{status}\", \"reason\":\"{reason.Replace("\"", "'")}\"}}}}";
+                jsExecutor.ExecuteScript(script);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to mark BrowserStack session status: {ex.Message}");
+            }
+            finally
+            {
+                driver.Quit();
+                driver.Dispose();
+            }
+        }
     }
 
     [Test]
