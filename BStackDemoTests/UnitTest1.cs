@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Remote;
 using NUnit.Framework;
 
 namespace BStackDemoTests;
@@ -11,7 +12,33 @@ public class Tests
     [SetUp]
     public void Setup()
     {
-        driver = new ChromeDriver();
+        // Local Chrome setup
+        // driver = new ChromeDriver();
+        // driver.Manage().Window.Maximize();
+
+        // BrowserStack RemoteWebDriver setup
+        var username = Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME_DEMO");
+        var accessKey = Environment.GetEnvironmentVariable("BROWSERSTACK_ACCESS_KEY_DEMO");
+        
+        var capabilities = new ChromeOptions();
+        
+        var bstackOptions = new Dictionary<string, object>
+        {
+            { "userName", username },
+            { "accessKey", accessKey },
+            { "os", "Windows" },
+            { "osVersion", "11" },
+            { "browserVersion", "latest" },
+            { "projectName", "BrowserStack Dotnet LegacySample4" },
+            { "buildName", "BStackDemoLegacy4" },
+            { "sessionName", TestContext.CurrentContext.Test.Name },
+            { "debug", "true" },
+            { "networkLogs", "true" },
+            { "consoleLogs", "errors" }
+        };
+        capabilities.AddAdditionalOption("bstack:options", bstackOptions);
+
+        driver = new RemoteWebDriver(new Uri("https://hub-cloud.browserstack.com/wd/hub"), capabilities);
         driver.Manage().Window.Maximize();
     }
 
@@ -22,30 +49,30 @@ public class Tests
         driver?.Dispose();
     }
 
-    // // [Test]
-    // public void TestBStackDemo()
-    // {
-    //     driver.Navigate().GoToUrl("https://bstackdemo.com/");
+    [Test]
+    public void TestBStackDemo()
+    {
+        driver.Navigate().GoToUrl("https://bstackdemo.com/");
     
-    //     System.Threading.Thread.Sleep(2000);
+        System.Threading.Thread.Sleep(2000);
         
-    //     var selGoogle = driver.FindElement(By.XPath("//span[@class='checkmark' and text()='Google']"));
-    //     selGoogle.Click();
+        var selGoogle = driver.FindElement(By.XPath("//span[@class='checkmark' and text()='Google']"));
+        selGoogle.Click();
         
-    //     System.Threading.Thread.Sleep(1000);
+        System.Threading.Thread.Sleep(1000);
         
-    //     var addToCartBtn = driver.FindElement(By.XPath("//div[@class='shelf-item__buy-btn' and text()='Add to cart']"));
-    //     addToCartBtn.Click();
+        var addToCartBtn = driver.FindElement(By.XPath("//div[@class='shelf-item__buy-btn' and text()='Add to cart']"));
+        addToCartBtn.Click();
         
-    //     System.Threading.Thread.Sleep(2000);
+        System.Threading.Thread.Sleep(2000);
         
-    //     Assert.Pass();
-    // }
+        Assert.Pass();
+    }
 
-    // // [Test]
-    // public void Analytics_TC003_SkipStatus_VerifySkipReporting()
-    // {
-    //     TestContext.WriteLine("[ANALYTICS] This test will be skipped to evaluate skip tracking");
-    //     Assert.Ignore("Test");
-    // }
+    [Test]
+    public void Analytics_TC003_SkipStatus_VerifySkipReporting()
+    {
+        TestContext.WriteLine("[ANALYTICS] This test will be skipped to evaluate skip tracking");
+        Assert.Ignore("Test");
+    }
 }

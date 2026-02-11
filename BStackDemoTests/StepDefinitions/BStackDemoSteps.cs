@@ -1,5 +1,6 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Remote;
 using NUnit.Framework;
 using Reqnroll;
 
@@ -9,11 +10,42 @@ namespace BStackDemoTests.StepDefinitions;
 public class BStackDemoSteps
 {
     private IWebDriver? _driver;
+    private readonly ScenarioContext _scenarioContext;
+
+    public BStackDemoSteps(ScenarioContext scenarioContext)
+    {
+        _scenarioContext = scenarioContext;
+    }
 
     [BeforeScenario]
     public void Setup()
     {
-        _driver = new ChromeDriver();
+        // _driver = new ChromeDriver();
+        // _driver.Manage().Window.Maximize();
+
+        var username = Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME_DEMO");
+        var accessKey = Environment.GetEnvironmentVariable("BROWSERSTACK_ACCESS_KEY_DEMO");
+        
+        
+        var capabilities = new ChromeOptions();  
+        
+        var bstackOptions = new Dictionary<string, object>
+        {
+            { "userName", username },
+            { "accessKey", accessKey },
+            { "os", "Windows" },
+            { "osVersion", "11" },
+            { "browserVersion", "latest" },
+            { "projectName", "BrowserStack Dotnet LegacySample4" },
+            { "buildName", "BStackDemoLegacy4" },
+            { "sessionName", _scenarioContext.ScenarioInfo.Title },
+            { "debug", "true" },
+            { "networkLogs", "true" },
+            { "consoleLogs", "errors" }
+        };
+        capabilities.AddAdditionalOption("bstack:options", bstackOptions);
+
+        _driver = new RemoteWebDriver(new Uri("https://hub-cloud.browserstack.com/wd/hub"), capabilities);
         _driver.Manage().Window.Maximize();
     }
 
@@ -68,6 +100,6 @@ public class BStackDemoSteps
     [Then(@"this test should be marked as skipped")]
     public void ThenThisTestShouldBeMarkedAsSkipped()
     {
-        // This won't execute due to Assert.Ignore above
+        //
     }
 }
